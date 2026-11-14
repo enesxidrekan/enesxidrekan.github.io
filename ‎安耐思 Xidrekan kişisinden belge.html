@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Enes Xidrekan</title>
+<meta name="description" content="Enes Xidrekan: chemistry research notes and articles in Kurdish, English and Chinese.">
+<style>
+/* Layout idea: a lab notebook page. Faint graph-paper grid, a carbon element tile as the mark,
+   section labels in a narrow left column like notebook margins. System fonts only, no external
+   requests, so the page opens in mainland China without waiting on blocked servers. */
+:root {
+  --paper: #f6f7f4;
+  --sheet: #ffffff;
+  --ink: #18212b;
+  --muted: #5a6573;
+  --rule: #dfe3dc;
+  --grid: rgba(47, 93, 158, 0.06);
+  --accent: #2f5d9e;
+  --accent-soft: #e6edf7;
+  --font-display: "Iowan Old Style", "Palatino Linotype", Palatino, "Noto Serif", "Songti SC", "Noto Serif CJK SC", Georgia, serif;
+  --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #12171d;
+    --sheet: #1a2129;
+    --ink: #e7ebef;
+    --muted: #9aa6b4;
+    --rule: #2b3540;
+    --grid: rgba(122, 164, 222, 0.06);
+    --accent: #7aa4de;
+    --accent-soft: #1f2d40;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #12171d;
+  --sheet: #1a2129;
+  --ink: #e7ebef;
+  --muted: #9aa6b4;
+  --rule: #2b3540;
+  --grid: rgba(122, 164, 222, 0.06);
+  --accent: #7aa4de;
+  --accent-soft: #1f2d40;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 24px 24px;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.6;
+}
+:lang(zh) body, html:lang(zh-Hans) body { line-height: 1.75; }
+h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.2; text-wrap: balance; margin: 0; }
+p { margin: 0; }
+a { color: var(--accent); }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+
+.wrap { max-width: 1040px; margin: 0 auto; padding: 0 20px; }
+
+/* Header */
+header.top {
+  position: sticky; top: 0; z-index: 5;
+  background: color-mix(in srgb, var(--paper) 88%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--rule);
+}
+.top-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 0; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); font-weight: 600; }
+.brand .mini {
+  width: 30px; height: 30px; border: 1.5px solid var(--ink); border-radius: 4px;
+  display: grid; place-items: center; font-family: var(--font-display); font-size: 15px;
+}
+nav.sections { display: flex; gap: 18px; flex-wrap: wrap; }
+nav.sections a { color: var(--muted); text-decoration: none; font-size: 15px; }
+nav.sections a:hover { color: var(--ink); }
+
+.lang { display: inline-flex; border: 1px solid var(--rule); border-radius: 999px; padding: 3px; background: var(--sheet); }
+.lang button {
+  font: inherit; font-size: 14px; border: 0; background: transparent; color: var(--muted);
+  padding: 5px 12px; border-radius: 999px; cursor: pointer;
+}
+.lang button[aria-pressed="true"] { background: var(--accent); color: var(--sheet); }
+.lang button:not([aria-pressed="true"]):hover { color: var(--ink); }
+
+/* Hero */
+.hero { display: grid; grid-template-columns: 1fr auto; gap: 40px; align-items: center; padding: 56px 0 40px; }
+.hero .role { color: var(--muted); font-size: 15px; letter-spacing: 0.02em; margin-bottom: 10px; }
+.hero h1 { font-size: clamp(38px, 6vw, 58px); margin-bottom: 18px; }
+.hero .intro { max-width: 60ch; font-size: 18px; }
+.langs-note { margin-top: 18px; display: flex; gap: 8px; flex-wrap: wrap; }
+.chip { font-size: 13px; padding: 3px 10px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); }
+
+.tile {
+  width: 168px; height: 168px; background: var(--sheet); border: 2px solid var(--ink); border-radius: 8px;
+  display: grid; grid-template-rows: auto 1fr auto; padding: 12px 14px;
+  box-shadow: 6px 6px 0 var(--accent-soft);
+}
+.tile .num { font-family: var(--font-mono); font-size: 14px; color: var(--muted); }
+.tile .sym { font-family: var(--font-display); font-size: 72px; line-height: 1; align-self: center; justify-self: center; }
+.tile .mass { font-family: var(--font-mono); font-size: 13px; color: var(--muted); text-align: center; font-variant-numeric: tabular-nums; }
+
+/* Sections */
+section.block { display: grid; grid-template-columns: 180px 1fr; gap: 32px; padding: 36px 0; border-top: 1px solid var(--rule); }
+.block > h2 { font-size: 22px; padding-top: 2px; }
+.block .body { display: grid; gap: 16px; min-width: 0; }
+
+.interests { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+.interest { background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; padding: 16px 18px; display: grid; gap: 6px; align-content: start; }
+.interest h3 { font-size: 18px; }
+.interest p { color: var(--muted); font-size: 15px; }
+
+.posts { display: grid; gap: 0; }
+.post { display: grid; grid-template-columns: 120px 1fr; gap: 20px; padding: 18px 0; border-bottom: 1px dashed var(--rule); }
+.post:first-child { padding-top: 0; }
+.post time { font-family: var(--font-mono); font-size: 13px; color: var(--muted); padding-top: 4px; font-variant-numeric: tabular-nums; }
+.post h3 { font-size: 20px; margin-bottom: 6px; }
+.post h3 a { color: var(--ink); text-decoration: none; }
+.post h3 a:hover { color: var(--accent); }
+.post p { color: var(--muted); font-size: 15.5px; max-width: 62ch; }
+.post .meta { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; align-items: center; }
+.formula { font-family: var(--font-mono); font-size: 13px; color: var(--ink); background: var(--sheet); border: 1px solid var(--rule); border-radius: 4px; padding: 2px 8px; }
+.example { font-size: 12px; padding: 2px 8px; border-radius: 4px; border: 1px dashed var(--muted); color: var(--muted); }
+
+.empty { background: var(--sheet); border: 1px solid var(--rule); border-left: 3px solid var(--accent); border-radius: 6px; padding: 16px 18px; color: var(--muted); max-width: 62ch; }
+
+.contact { display: grid; gap: 10px; }
+.contact-row { display: grid; grid-template-columns: 110px 1fr; gap: 12px; align-items: baseline; }
+.contact-row dt { color: var(--muted); font-size: 14px; }
+.contact-row dd { margin: 0; font-family: var(--font-mono); font-size: 15px; overflow-wrap: anywhere; }
+dl { margin: 0; }
+
+footer { border-top: 1px solid var(--rule); padding: 24px 0 40px; color: var(--muted); font-size: 14px; }
+
+@media (max-width: 760px) {
+  .hero { grid-template-columns: 1fr; padding: 36px 0 28px; gap: 28px; }
+  .tile { width: 120px; height: 120px; order: -1; }
+  .tile .sym { font-size: 50px; }
+  section.block { grid-template-columns: 1fr; gap: 14px; padding: 28px 0; }
+  nav.sections { display: none; }
+  .post { grid-template-columns: 1fr; gap: 4px; }
+  .contact-row { grid-template-columns: 1fr; gap: 0; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap top-inner">
+    <a class="brand" href="#" data-scroll="top"><span class="mini">Ex</span><span>Enes Xidrekan</span></a>
+    <nav class="sections" aria-label="Sections">
+      <a href="#" data-scroll="research" data-i18n="nav_research">Research</a>
+      <a href="#" data-scroll="writing" data-i18n="nav_writing">Writing</a>
+      <a href="#" data-scroll="publications" data-i18n="nav_publications">Publications</a>
+      <a href="#" data-scroll="contact" data-i18n="nav_contact">Contact</a>
+    </nav>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" id="lang-ku" data-lang="ku" aria-pressed="false" lang="ku">Kurdî</button>
+      <button type="button" id="lang-en" data-lang="en" aria-pressed="true" lang="en">English</button>
+      <button type="button" id="lang-zh" data-lang="zh" aria-pressed="false" lang="zh-Hans">中文</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap" id="top">
+  <div class="hero">
+    <div>
+      <p class="role" data-i18n="role">Chemistry student · Boğaziçi University, Istanbul</p>
+      <h1>Enes Xidrekan</h1>
+      <p class="intro" data-i18n="intro">I write about chemistry: what I learn in the lab, what I calculate with Python, and the questions I am researching. This site collects my research notes and articles in Kurdish, English and Chinese.</p>
+      <div class="langs-note">
+        <span class="chip" lang="ku">Kurdî</span>
+        <span class="chip" lang="en">English</span>
+        <span class="chip" lang="zh-Hans">中文</span>
+      </div>
+    </div>
+    <div class="tile" aria-hidden="true">
+      <span class="num">6</span>
+      <span class="sym">Ex</span>
+      <span class="mass">12.011</span>
+    </div>
+  </div>
+
+  <section class="block" id="research">
+    <h2 data-i18n="h_research">Research interests</h2>
+    <div class="body">
+      <div class="interests">
+        <div class="interest">
+          <h3 data-i18n="r1_t">Organic chemistry</h3>
+          <p data-i18n="r1_d">Reaction mechanisms, synthesis, and lab techniques such as extraction and sublimation.</p>
+        </div>
+        <div class="interest">
+          <h3 data-i18n="r2_t">Computational chemistry</h3>
+          <p data-i18n="r2_d">Using Python to analyse data, model molecules and automate calculations.</p>
+        </div>
+        <div class="interest">
+          <h3 data-i18n="r3_t">Natural products</h3>
+          <p data-i18n="r3_d">Isolating and identifying compounds from plants, starting with caffeine from tea.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="writing">
+    <h2 data-i18n="h_writing">Writing</h2>
+    <div class="body">
+      <div class="posts">
+        <article class="post">
+          <time datetime="2026-11">2026-11</time>
+          <div>
+            <h3><a href="#" data-i18n="p1_t">Isolating caffeine from tea: extraction and sublimation</a></h3>
+            <p data-i18n="p1_d">How a weak base hides in a cup of tea, and how dichloromethane and gentle heat bring it out as white crystals.</p>
+            <div class="meta">
+              <span class="chip" data-i18n="tag_lab">Lab notes</span>
+              <span class="formula">C₈H₁₀N₄O₂</span>
+              <span class="example" data-i18n="example">Example</span>
+            </div>
+          </div>
+        </article>
+        <article class="post">
+          <time datetime="2026-10">2026-10</time>
+          <div>
+            <h3><a href="#" data-i18n="p2_t">Plotting a titration curve with Python</a></h3>
+            <p data-i18n="p2_d">A short script that turns pH readings into a titration curve and finds the equivalence point.</p>
+            <div class="meta">
+              <span class="chip">Python</span>
+              <span class="formula">pH = pKₐ + log([A⁻]/[HA])</span>
+              <span class="example" data-i18n="example">Example</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="publications">
+    <h2 data-i18n="h_publications">Publications</h2>
+    <div class="body">
+      <p class="empty" data-i18n="pub_empty">No publications yet. Preprints and papers will be listed here with their DOI.</p>
+    </div>
+  </section>
+
+  <section class="block" id="contact">
+    <h2 data-i18n="h_contact">Contact</h2>
+    <div class="body">
+      <dl class="contact">
+        <div class="contact-row"><dt data-i18n="c_email">Email</dt><dd>[email]</dd></div>
+        <div class="contact-row"><dt>ORCID</dt><dd>0000-0000-0000-0000</dd></div>
+        <div class="contact-row"><dt>GitHub</dt><dd>github.com/[username]</dd></div>
+        <div class="contact-row"><dt data-i18n="c_zhihu">Zhihu</dt><dd>zhihu.com/people/[username]</dd></div>
+      </dl>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>© 2026 Enes Xidrekan · <span data-i18n="footer">Istanbul</span></p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var T = {
+    en: {
+      _lang: "en", _title: "Enes Xidrekan",
+      nav_research: "Research", nav_writing: "Writing", nav_publications: "Publications", nav_contact: "Contact",
+      role: "Chemistry student · Boğaziçi University, Istanbul",
+      intro: "I write about chemistry: what I learn in the lab, what I calculate with Python, and the questions I am researching. This site collects my research notes and articles in Kurdish, English and Chinese.",
+      h_research: "Research interests",
+      r1_t: "Organic chemistry", r1_d: "Reaction mechanisms, synthesis, and lab techniques such as extraction and sublimation.",
+      r2_t: "Computational chemistry", r2_d: "Using Python to analyse data, model molecules and automate calculations.",
+      r3_t: "Natural products", r3_d: "Isolating and identifying compounds from plants, starting with caffeine from tea.",
+      h_writing: "Writing",
+      p1_t: "Isolating caffeine from tea: extraction and sublimation",
+      p1_d: "How a weak base hides in a cup of tea, and how dichloromethane and gentle heat bring it out as white crystals.",
+      p2_t: "Plotting a titration curve with Python",
+      p2_d: "A short script that turns pH readings into a titration curve and finds the equivalence point.",
+      tag_lab: "Lab notes", example: "Example",
+      h_publications: "Publications",
+      pub_empty: "No publications yet. Preprints and papers will be listed here with their DOI.",
+      h_contact: "Contact", c_email: "Email", c_zhihu: "Zhihu",
+      footer: "Istanbul"
+    },
+    ku: {
+      _lang: "ku", _title: "Enes Xidrekan",
+      nav_research: "Lêkolîn", nav_writing: "Nivîs", nav_publications: "Weşan", nav_contact: "Têkilî",
+      role: "Xwendekarê kîmyayê · Zanîngeha Boğaziçi, Stenbol",
+      intro: "Ez li ser kîmyayê dinivîsim: tiştên ku li laboratuvarê hîn dibim, tiştên ku bi Python hesab dikim û pirsên ku lê dikolim. Ev malper nîşe û gotarên min ên lêkolînê bi kurdî, îngilîzî û çînî li hev dicivîne.",
+      h_research: "Qadên lêkolînê",
+      r1_t: "Kîmyaya organîk", r1_d: "Mekanîzmayên reaksiyonan, sentez û teknîkên laboratuvarê yên wekî ekstraksiyon û sublîmasyon.",
+      r2_t: "Kîmyaya hesabkirinê", r2_d: "Bikaranîna Python ji bo analîza daneyan, modelkirina molekulan û otomatîkkirina hesaban.",
+      r3_t: "Berhemên xwezayî", r3_d: "Veqetandin û naskirina pêkhateyan ji nebatan, bi kafeîna di çayê de dest pê dike.",
+      h_writing: "Nivîs",
+      p1_t: "Veqetandina kafeînê ji çayê: ekstraksiyon û sublîmasyon",
+      p1_d: "Bazeke qels çawa di qedehek çayê de vedişêre, û diklorometan û germahiyek nerm çawa wê wekî krîstalên spî derdixin holê.",
+      p2_t: "Xêzkirina kevana tîtrasyonê bi Python",
+      p2_d: "Skrîptek kurt ku xwendinên pH-ê vediguherîne kevana tîtrasyonê û xala ekîvalansê dibîne.",
+      tag_lab: "Nîşeyên laboratuvarê", example: "Mînak",
+      h_publications: "Weşan",
+      pub_empty: "Hêj weşan tune ne. Pêşçap û gotarên zanistî dê li vir bi DOI-ya xwe werin rêzkirin.",
+      h_contact: "Têkilî", c_email: "E-name", c_zhihu: "Zhihu",
+      footer: "Stenbol"
+    },
+    zh: {
+      _lang: "zh-Hans", _title: "Enes Xidrekan · 化学",
+      nav_research: "研究", nav_writing: "文章", nav_publications: "发表", nav_contact: "联系",
+      role: "化学专业学生 · 博阿齐奇大学，伊斯坦布尔",
+      intro: "我撰写关于化学的内容：在实验室中学到的知识、用 Python 完成的计算，以及我正在研究的问题。本网站以库尔德语、英语和中文收录我的研究笔记和文章。",
+      h_research: "研究方向",
+      r1_t: "有机化学", r1_d: "反应机理、合成，以及萃取和升华等实验技术。",
+      r2_t: "计算化学", r2_d: "使用 Python 分析数据、构建分子模型并实现计算自动化。",
+      r3_t: "天然产物", r3_d: "从植物中分离和鉴定化合物，从茶叶中的咖啡因开始。",
+      h_writing: "文章",
+      p1_t: "从茶叶中分离咖啡因：萃取与升华",
+      p1_d: "一种弱碱如何藏在一杯茶里，以及二氯甲烷和温和加热如何让它以白色晶体的形式出现。",
+      p2_t: "用 Python 绘制滴定曲线",
+      p2_d: "一个简短的脚本，把 pH 读数绘制成滴定曲线并找出等当点。",
+      tag_lab: "实验笔记", example: "示例",
+      h_publications: "发表",
+      pub_empty: "暂无发表成果。预印本和论文将连同 DOI 列于此处。",
+      h_contact: "联系方式", c_email: "电子邮件", c_zhihu: "知乎",
+      footer: "伊斯坦布尔"
+    }
+  };
+
+  function setLang(code, remember) {
+    var d = T[code] || T.en;
+    document.documentElement.lang = d._lang;
+    document.title = d._title;
+    var nodes = document.querySelectorAll("[data-i18n]");
+    for (var i = 0; i < nodes.length; i++) {
+      var k = nodes[i].getAttribute("data-i18n");
+      if (d[k] != null) nodes[i].textContent = d[k];
+    }
+    var btns = document.querySelectorAll(".lang button");
+    for (var j = 0; j < btns.length; j++) {
+      btns[j].setAttribute("aria-pressed", btns[j].getAttribute("data-lang") === code ? "true" : "false");
+    }
+    if (remember) {
+      try { localStorage.setItem("site-lang", code); } catch (e) {}
+      try { history.replaceState(null, "", "#" + code); } catch (e) { location.hash = code; }
+    }
+  }
+
+  function initialLang() {
+    var h = (location.hash || "").replace("#", "");
+    if (T[h]) return h;
+    try { var s = localStorage.getItem("site-lang"); if (T[s]) return s; } catch (e) {}
+    var n = (navigator.language || "en").toLowerCase();
+    if (n.indexOf("zh") === 0) return "zh";
+    if (n.indexOf("ku") === 0 || n.indexOf("kmr") === 0) return "ku";
+    return "en";
+  }
+
+  document.querySelector(".lang").addEventListener("click", function (e) {
+    var b = e.target.closest("button[data-lang]");
+    if (b) setLang(b.getAttribute("data-lang"), true);
+  });
+
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest("[data-scroll]");
+    if (!a) return;
+    e.preventDefault();
+    var el = document.getElementById(a.getAttribute("data-scroll"));
+    if (el) el.scrollIntoView();
+  });
+
+  window.addEventListener("hashchange", function () {
+    var h = (location.hash || "").replace("#", "");
+    if (T[h]) setLang(h, false);
+  });
+
+  setLang(initialLang(), false);
+})();
+</script>
+</body>
+</html>
