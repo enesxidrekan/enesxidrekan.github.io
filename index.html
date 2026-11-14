@@ -224,12 +224,11 @@ footer { border-top: 1px solid var(--rule); padding: 24px 0 40px; color: var(--m
         <article class="post">
           <time datetime="2026-11">2026-11</time>
           <div>
-            <h3><a href="#" data-i18n="p1_t">Isolating caffeine from tea: extraction and sublimation</a></h3>
-            <p data-i18n="p1_d">How a weak base hides in a cup of tea, and how dichloromethane and gentle heat bring it out as white crystals.</p>
+            <h3><a href="caffeine.html" class="post-link" data-i18n="p1_t">Isolating caffeine from tea leaves</a></h3>
+            <p data-i18n="p1_d">Boiling tea with sodium carbonate, extracting with dichloromethane and purifying by sublimation, with photos from the lab.</p>
             <div class="meta">
               <span class="chip" data-i18n="tag_lab">Lab notes</span>
               <span class="formula">C₈H₁₀N₄O₂</span>
-              <span class="example" data-i18n="example">Example</span>
             </div>
           </div>
         </article>
@@ -288,8 +287,8 @@ footer { border-top: 1px solid var(--rule); padding: 24px 0 40px; color: var(--m
       r2_t: "Computational chemistry", r2_d: "Using Python to analyse data, model molecules and automate calculations.",
       r3_t: "Natural products", r3_d: "Isolating and identifying compounds from plants, starting with caffeine from tea.",
       h_writing: "Writing",
-      p1_t: "Isolating caffeine from tea: extraction and sublimation",
-      p1_d: "How a weak base hides in a cup of tea, and how dichloromethane and gentle heat bring it out as white crystals.",
+      p1_t: "Isolating caffeine from tea leaves",
+      p1_d: "Boiling tea with sodium carbonate, extracting with dichloromethane and purifying by sublimation, with photos from the lab.",
       p2_t: "Plotting a titration curve with Python",
       p2_d: "A short script that turns pH readings into a titration curve and finds the equivalence point.",
       tag_lab: "Lab notes", example: "Example",
@@ -308,8 +307,8 @@ footer { border-top: 1px solid var(--rule); padding: 24px 0 40px; color: var(--m
       r2_t: "Kîmyaya hesabkirinê", r2_d: "Bikaranîna Python ji bo analîza daneyan, modelkirina molekulan û otomatîkkirina hesaban.",
       r3_t: "Berhemên xwezayî", r3_d: "Veqetandin û naskirina pêkhateyan ji nebatan, bi kafeîna di çayê de dest pê dike.",
       h_writing: "Nivîs",
-      p1_t: "Veqetandina kafeînê ji çayê: ekstraksiyon û sublîmasyon",
-      p1_d: "Bazeke qels çawa di qedehek çayê de vedişêre, û diklorometan û germahiyek nerm çawa wê wekî krîstalên spî derdixin holê.",
+      p1_t: "Veqetandina kafeînê ji pelên çayê",
+      p1_d: "Kelandina çayê bi sodyûm karbonatê, ekstraksiyon bi diklorometanê û paqijkirin bi sublîmasyonê, bi wêneyên ji laboratuvarê.",
       p2_t: "Xêzkirina kevana tîtrasyonê bi Python",
       p2_d: "Skrîptek kurt ku xwendinên pH-ê vediguherîne kevana tîtrasyonê û xala ekîvalansê dibîne.",
       tag_lab: "Nîşeyên laboratuvarê", example: "Mînak",
@@ -328,8 +327,8 @@ footer { border-top: 1px solid var(--rule); padding: 24px 0 40px; color: var(--m
       r2_t: "计算化学", r2_d: "使用 Python 分析数据、构建分子模型并实现计算自动化。",
       r3_t: "天然产物", r3_d: "从植物中分离和鉴定化合物，从茶叶中的咖啡因开始。",
       h_writing: "文章",
-      p1_t: "从茶叶中分离咖啡因：萃取与升华",
-      p1_d: "一种弱碱如何藏在一杯茶里，以及二氯甲烷和温和加热如何让它以白色晶体的形式出现。",
+      p1_t: "从茶叶中分离咖啡因",
+      p1_d: "用碳酸钠煮茶、用二氯甲烷萃取并通过升华纯化，附实验室照片。",
       p2_t: "用 Python 绘制滴定曲线",
       p2_d: "一个简短的脚本，把 pH 读数绘制成滴定曲线并找出等当点。",
       tag_lab: "实验笔记", example: "示例",
@@ -352,6 +351,11 @@ footer { border-top: 1px solid var(--rule); padding: 24px 0 40px; color: var(--m
     var btns = document.querySelectorAll(".lang button");
     for (var j = 0; j < btns.length; j++) {
       btns[j].setAttribute("aria-pressed", btns[j].getAttribute("data-lang") === code ? "true" : "false");
+    }
+    var posts = document.querySelectorAll("a.post-link");
+    for (var m = 0; m < posts.length; m++) {
+      var base = posts[m].getAttribute("href").split("#")[0];
+      posts[m].setAttribute("href", base + "#" + (T[code] ? code : "en"));
     }
     if (remember) {
       try { localStorage.setItem("site-lang", code); } catch (e) {}
